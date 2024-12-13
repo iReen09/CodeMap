@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend Roadmap - Codemap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .connection-line {
+            position: absolute;
+            background-color: #3b82f6;
+            transform-origin: left center;
+            transition: 0, 5;
+        }
+
+        .connection-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #3b82f6;
+            border-radius: 50%;
+            position: absolute;
+            transition: 0, 5;
+        }
+
+        .topic-container {
+            position: relative;
+            z-index: 1;
+            transition: 0, 5;
+        }
+
+        .connections-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            transition: 0, 5;
+        }
+
+        .roadmap-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            position: relative;
+            transition: 0, 5;
+        }
+
+        /* Animasi pop up */
+        @keyframes slide-in {
+            from {
+                transform: translateX(100%);
+            }
+
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slide-out {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(100%);
+            }
+        }
+
+        .topic-container {
+            position: relative;
+            z-index: 1;
+        }
+
+        #http-popup {
+            transition: transform 0.5s ease-in-out, opacity 0.3s ease-in-out;
+            z-index: 1000;
+            /* Menambahkan z-index untuk pop-up */
+        }
+
+        #http-popup.show {
+            opacity: 1;
+            animation: slide-in 0.3s ease-in-out;
+        }
+
+        #http-popup.hide {
+            opacity: 0;
+            animation: slide-out 0.3s ease-in-out;
+        }
+
+        .divider {
+            border-top: 2px solid #dadada;
+            margin: 20px 0;
+            position: relative;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-900 text-white min-h-screen">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-gray-900 border-b border-gray-800 px-6 py-4">
+        <div class="flex items-center justify-between max-w-7xl mx-auto">
+            <div class="flex items-center space-x-6">
+                <a href="../index.html" class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-500">
+                    Codemap</a>
+                <div class="relative group">
+                    <button id="dropdownButton" class="px-4 py-2 text-gray-0 hover:text-blue-400">
+                        Roadmaps
+                    </button>
+
+                    <!-- Dropdown Menu -->
+                    <div id="dropdownMenu" class="absolute hidden mt-2 w-48 bg-gray-900 text-white rounded-md shadow-lg z-10">
+                        <a href="frontend.html" class="block px-4 py-2 hover:bg-gray-700">Frontend Roadmap</a>
+                        <a href="backend.html" class="block px-4 py-2 hover:bg-gray-700">Backend Roadmap</a>
+                        <a href="fullstack.html" class="block px-4 py-2 hover:bg-gray-700">Fullstack Roadmap</a>
+                    </div>
+                    <!-- Scripts -->
+                    <script>
+                        // Dropdown toggle logic
+                        const dropdownButton = document.getElementById('dropdownButton');
+                        const dropdownMenu = document.getElementById('dropdownMenu');
+
+                        dropdownButton.addEventListener('click', () => {
+                            dropdownMenu.classList.toggle('hidden');
+                        });
+
+                        // Close dropdown if clicked outside
+                        document.addEventListener('click', (event) => {
+                            if (!dropdownButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                                dropdownMenu.classList.add('hidden');
+                            }
+                        });
+                    </script>
+                </div>
+                <a href="../index.html" class="hover:text-blue-400">Home</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        <!-- Header Section -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold mb-2">Fullstack Developer Roadmap</h1>
+            <p class="text-gray-400">Panduan langkah demi langkah untuk menjadi backend developer pada 2024.</p>
+        </div>
+
+        <!-- Roadmap Content -->
+        <div class="bg-gray-800 rounded-lg p-6">
+            <div class="flex items-center space-x-2 mb-4">
+                <div class="w-4 h-4 rounded-full bg-yellow-500"></div>
+                <span>Judul / Topic of Content</span>
+            </div>
+            <div class="flex items-center space-x-2 mb-4">
+                <div class="w-4 h-4 rounded-full bg-gray-500"></div>
+                <span>Detail of Content</span>
+            </div>
+        </div>
+
+        <!-- Roadmap Diagram -->
+        <div class="mt-8 bg-gray-800 rounded-lg p-6">
+            <!-- Roadmap Container -->
+            <div class="relative" id="roadmap">
+                <!-- Frontend Basics Column -->
+                <div class="topic-container space-y-4">
+                    <div class="text-center">
+                        <h3 class="text-xl font-bold mb-4">HTML</h3>
+                        <button id="html-node" class="w-full bg-yellow-400 text-black px-4 py-2 rounded-lg hover:bg-yellow-500 transition-colors" onclick="showModal('html-definition')">
+                            Apa itu HTML?
+                        </button>
+                    </div>
+                    <div class="space-y-2">
+                        <button id="learn-basics" class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('html-basics')">
+                            Dasar HTML
+                        </button>
+                        <button class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('semantic-html')">
+                            Semantic HTML
+                        </button>
+                        <button class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('forms-validations')">
+                            Form and Validasi
+                        </button>
+                        <button id="learn-basics" class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('aksesibilitas')">
+                            Aksesibilitas
+                        </button>
+                        <button id="learn-basics" class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('SEO')">
+                            SEO Dasar
+                        </button>
+                    </div>
+                </div><br></br>
+
+                <!-- Internet Column -->
+                <div class="topic-container space-y-4">
+                    <div class="text-center">
+                        <h3 class="text-xl font-bold mb-4">JavaScript</h3>
+                        <button id="internet-node" class="w-full bg-yellow-400 text-black px-4 py-2 rounded-lg hover:bg-yellow-500 transition-colors" onclick="showModal('JSdefinition')">
+                            Apa itu JavaScript?
+                        </button>
+                    </div>
+                    <div class="space-y-2">
+                        <button class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('dasarJS')">
+                            Dasar-dasar JavaScript
+                        </button>
+                        <button class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('DOM')">
+                            Manipulasi DOM
+                        </button>
+                        <button class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('API')">
+                            Fetch API
+                        </button>
+                    </div>
+                </div><br></br>
+
+                <!-- CSS Column -->
+                <div class="topic-container space-y-4">
+                    <div class="text-center">
+                        <h3 class="text-xl font-bold mb-4">CSS</h3>
+                        <button id="html-node" class="w-full bg-yellow-400 text-black px-4 py-2 rounded-lg hover:bg-yellow-500 transition-colors" onclick="showModal('css')">
+                            Apa itu CSS?
+                        </button>
+                    </div>
+                    <div class="space-y-2">
+                        <button id="learn-basics" class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('css-dasar')">
+                            CSS Dasar
+                        </button>
+                        <button class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('css-layout')">
+                            Layout CSS
+                        </button>
+                        <button class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('responsive-css')">
+                            Responsive Design
+                        </button>
+                    </div>
+                </div>
+                <br></br>
+
+                <!-- Connections Layer -->
+                <div class="connections-container" id="connections"></div>
+
+                <!-- Topics Layer -->
+                <div class="roadmap-grid">
+                    <!-- Internet Basics -->
+                    <div class="topic-container space-y-4">
+                        <div class="text-center">
+                            <h3 class="text-xl font-bold mb-4">Internet</h3>
+                            <button id="language-node" class="w-full bg-yellow-400 text-black px-4 py-2 rounded-lg hover:bg-yellow-500 transition-colors" onclick="showModal('programming-language')">
+                                Pilih Internet
+                            </button>
+                        </div>
+                        <div class="space-y-2">
+                            <button class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('http')">
+                                Apa itu HTTP & HTTPS?
+                            </button>
+                            <button class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick=" showModal('dns')">
+                                Apa itu DNS?
+                            </button>
+                            <button class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('hosting')">
+                                Apa itu Hosting?
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Pilih Bahasa Pemrograman -->
+                    <div class="topic-container space-y-4">
+                        <div class="text-center">
+                            <h3 class="text-xl font-bold mb-4">Bahasa Pemrograman</h3>
+                            <button id="language-node" class="w-full bg-yellow-400 text-black px-4 py-2 rounded-lg hover:bg-yellow-500 transition-colors" onclick="showModal('programming-language')">
+                                Pilih Bahasa
+                            </button>
+                        </div>
+                        <div class="space-y-2">
+                            <button class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('php')">
+                                Apa itu PHP?
+                            </button>
+                            <button class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('go')">
+                                Apa itu GO?
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Framework Backend -->
+                    <div class="topic-container space-y-4">
+                        <div class="text-center">
+                            <h3 class="text-xl font-bold mb-4">Framework Backend</h3>
+                            <button id="framework-node" class="w-full bg-yellow-400 text-black px-4 py-2 rounded-lg hover:bg-yellow-500 transition-colors" onclick="showModal('framework')">
+                                Pilih Framework
+                            </button>
+                        </div>
+                        <div class="space-y-2">
+                            <button class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('laravel')">
+                                Apa itu Laravel?
+                            </button>
+                            <button class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('GORM')">
+                                Apa itu GORM?
+                            </button>
+                            <button class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('bootstrap')">
+                                Apa itu Bootstrap?
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Database -->
+                    <div class="topic-container space-y-4">
+                        <div class="text-center">
+                            <h3 class="text-xl font-bold mb-4">Database</h3>
+                            <button id="database-node" class="w-full bg-yellow-400 text-black px-4 py-2 rounded-lg hover:bg-yellow-500 transition-colors" onclick="showModal('database')">
+                                Pilih Database
+                            </button>
+                        </div>
+                        <div class="space-y-2">
+                            <button class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('sql')">
+                                Apa ituMySQL?
+                            </button>
+                            <button class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('db')">
+                                Apa itu MariaDB?
+                            </button>
+                            <button class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('oracle')">
+                                Apa itu Oracle?
+                            </button>
+                            <button class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('sqlite')">
+                                Apa itu SQLite?
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Authentication -->
+                    <div class="topic-container space-y-4">
+                        <div class="text-center">
+                            <h3 class="text-xl font-bold mb-4">Authentication</h3>
+                            <button id="auth-node" class="w-full bg-yellow-400 text-black px-4 py-2 rounded-lg hover:bg-yellow-500 transition-colors" onclick="showModal('auth')">
+                                Pilih Authentication
+                            </button>
+                        </div>
+                        <div class="space-y-2">
+                            <button class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('jwt')">
+                                Apa itu JWT?
+                            </button>
+                            <button class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('oauth')">
+                                Apa itu OAuth?
+                            </button>
+                            <button class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('openid')">
+                                Apa itu OpenID?
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Deployment -->
+                    <div class="topic-container space-y-4">
+                        <div class="text-center">
+                            <h3 class="text-xl font-bold mb-4">Server</h3>
+                            <button id="deployment-node" class="w-full bg-yellow-400 text-black px-4 py-2 rounded-lg hover:bg-yellow-500 transition-colors" onclick="showModal('deployment')">
+                                Pilih Web Server
+                            </button>
+                        </div>
+                        <div class="space-y-2">
+                            <button class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('nginx')">
+                                Apa itu Nginx?
+                            </button>
+                            <button class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('apache')">
+                                Apa itu Apache?
+                            </button>
+                            <button class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('caddy')">
+                                Apa itu Caddy?
+                            </button>
+                            <button class="w-full bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" onclick="showModal('ms')">
+                                Apa itu MS IIS?
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Pop-up Modal -->
+    <div id="http-popup" class="fixed top-0 right-0 w-full sm:w-1/3 h-full bg-gray-800 p-6 transition-transform transform translate-x-full opacity-0"
+        style="background-color: rgba(31, 41, 55, 0.9); z-index: 1000;">
+        <h2 class="text-2xl font-bold mb-4"></h2>
+        <h5 class="text-gray-400 mb-4"></h5>
+        <p class="text-gray-400 mb-4"></p>
+        <h1 class="text-gray-400 mb-4"></h1>
+        <div class="divider"></div>
+        <a id="popup-link" href="#" target="_blank" class="text-black-500 underline mb-4 block hover:text-gray-400"></a>
+        <button class="bg-red-600 px-4 py-2 rounded-md hover:bg-red-700" onclick="hideModal()">Tutup</button>
+    </div>
+
+
+    <script>
+        function showModal(type) {
+            const popup = document.getElementById('http-popup');
+            const popupContent = {
+                http: {
+                    title: "Apa itu HTTP & HTTPS?",
+                    content: "Hypertext transfer protocol (HTTP) adalah sebuah protokol atau seperangkat aturan komunikasi untuk komunikasi klien-server. Saat Anda mengunjungi situs web, peramban Anda mengirimkan permintaan HTTP ke server web, yang merespons dengan respons HTTP. Server web dan peramban Anda akan bertukar data sebagai plaintext. Singkatnya, protokol HTTP adalah teknologi dasar yang mendukung komunikasi jaringan. Seperti namanya, hypertext transfer protocol secure (HTTPS) adalah versi atau perpanjangan HTTP yang lebih aman. Di HTTPS, peramban dan server akan membuat koneksi yang aman dan terenkripsi sebelum mentransfer data.",
+
+                    content3: "HTTP adalah protokol lapisan aplikasi dalam model komunikasi jaringan Interkoneksi Sistem Terbuka (OSI). Protokol ini menentukan beberapa jenis permintaan dan respons. Misalnya, ketika Anda ingin melihat beberapa data dari situs web, Anda mengirim permintaan HTTP GET. Jika Anda ingin mengirim beberapa informasi, seperti mengisi formulir kontak, Anda mengirim permintaan HTTP PUT.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    link: "https://aws.amazon.com/id/compare/the-difference-between-https-and-http/",
+                    linkText: "Pelajari lebih mengenai HTTP & HTTPS"
+                },
+                dns: {
+                    title: "Apa itu DNS?",
+                    content: "DNS adalah sistem penting dalam jaringan yang mengubah nama domain mudah diingat menjadi alamat IP numerik. Artikel ini menjelaskan pengertian, fungsi, cara kerja, kelebihan, kekurangan, serta jenis-jenis DNS seperti resolver, authoritative, recursive, dan caching server. DNS memungkinkan akses yang mudah ke situs web dan layanan online, menyediakan kemudahan penggunaan, skalabilitas, serta ketersediaan tinggi melalui replikasi data dan server redundan. Namun, DNS juga memiliki beberapa kekurangan seperti ketergantungan pada server dan masalah keamanan.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://it.telkomuniversity.ac.id/dns-adalah/",
+                    linkText: "Pelajari lebih mengenai DNS"
+                },
+                hosting: {
+                    title: "Apa itu Hosting?",
+                    content: "Hosting web adalah layanan yang menyimpan situs web atau aplikasi web Anda dan membuatnya mudah diakses di berbagai perangkat seperti desktop, seluler, dan tablet. Setiap aplikasi web atau situs web biasanya terbuat dari banyak file, seperti gambar, video, teks, dan kode, yang perlu Anda simpan di komputer khusus yang disebut server. Penyedia layanan hosting web memelihara, mengonfigurasi, dan menjalankan server fisik yang dapat Anda sewa untuk file. Layanan hosting situs web dan aplikasi web juga memberikan dukungan tambahan, seperti keamanan, pencadangan situs web, serta performa situs web, yang membebaskan waktu Anda agar dapat fokus pada fungsi inti dari situs web Anda.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://aws.amazon.com/id/what-is/web-hosting/",
+                    linkText: "Pelajari lebih mengenai Hosting"
+                },
+                php: {
+                    title: "Apa itu PHP?",
+                    content: "PHP (Hypertext Preprocessor) adalah bahasa pemrograman open-source yang umumnya digunakan untuk membangun aplikasi web dinamis dan interaktif. PHP dapat dijalankan pada server web dan dikombinasikan dengan HTML, CSS, dan JavaScript untuk membuat halaman web yang dinamis.Saat ini, PHP sangat populer di kalangan web developer karena mudah dipelajari dan memiliki kemampuan yang cukup kuat. PHP juga mendukung banyak jenis database, seperti MySQL, PostgreSQL, dan Oracle sehingga memungkinkan pengembang untuk membuat aplikasi web yang lebih kompleks dan fungsional. ",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://www.biznetgio.com/news/apa-itu-php",
+                    linkText: "Pelajari lebih mengenai PHP"
+                },
+                go: {
+                    title: "Apa itu GO?",
+                    content: "Golang adalah bahasa pemrograman yang memiliki sejumlah kelebihan yang tidak dimiliki bahasa pemrograman yang lainnya. Hadirnya bahasa pemrograman Go Language (Golang) semakin dirasakan oleh para pengembang. Golang merupakan bahasa pemrograman yang dibuat Google dan tujuannya untuk menyempurnakan bahasa pemrograman yang ada, seperti C, Phyton dan yang lainnya. Golang bisa jadi pilihan yang tepat saat membuat aplikasi baru. Nah, supaya Anda lebih memahami Go Language (Golang) bisa simak penjelasan di bawah ini.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://codingstudio.id/blog/golang-adalah/",
+                    linkText: "Pelajari lebih mengenai GO"
+                },
+                laravel: {
+                    title: "Apa itu Laravel?",
+                    content: "Laravel merupakan framework PHP yang open-source dan berisi banyak modul dasar untuk mengoptimalkan kinerja PHP dalam pengembangan aplikasi web, apalagi PHP adalah bahasa pemrograman yang dinamis dan Laravel disini bisa bertindak untuk membuat web development lebih cepat, lebih aman, dan lebih simpel.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://www.biznetgio.com/news/apa-itu-laravel",
+                    linkText: "Pelajari lebih mengenai Laravel"
+                },
+                GORM: {
+                    title: "Apa itu GORM?",
+                    content: "GORM adalah alat pemetaan terkait objek untuk bahasa pemrograman Go. Solusi ini menyediakan framework untuk memetakan model domain berorientasi objek ke database relasional. Anda dapat mengintegrasikan database dialek GoogleSQL dengan GORM menggunakan Dialek Spanner ( SpannerDialect ) open source.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://gorm.io/docs/models.html",
+                    linkText: "Pelajari lebih mengenai GORM"
+                },
+                sql: {
+                    title: "Apa itu MySQL?",
+                    content: "MySQL yang dibaca MY-ES-KYOO-EL merupakan sistem manajemen database yang bersifat open-source yang menggunakan perintah dasar atau bahasa pemrograman yang berupa structured query language (SQL) yang cukup populer di dunia teknologi. MySQL berguna sebagai database. Dalam istilah pemrograman, SQL sendiri menjadi bahasa yang dipakai di dalam pengambilan data pada relational database atau database yang terstruktur. Dengan kata lain, MySQL merupakan database management system yang menggunakan bahasa SQL sebagai bahasa penghubung antara perangkat lunak aplikasi dengan database server.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://www.biznetgio.com/news/apa-itu-mysql",
+                    linkText: "Pelajari lebih mengenai MySQL"
+                },
+                db: {
+                    title: "Apa itu MariaDB?",
+                    content: "MariaDB adalah sebuah sistem manajemen basis data open source yang dikembangkan sebagai alternatif dari MySQL. Sistem ini berfungsi untuk mengelola database relasional dengan lebih fleksibel dan efisien. MariaDB sering digunakan dalam berbagai aplikasi, mulai dari situs web kecil hingga aplikasi bisnis besar.Pada konteks web, MariaDB digunakan untuk menyimpan dan mengambil data secara cepat, memungkinkan aplikasi web untuk berjalan dengan lancar. Pemahaman tentang MariaDB menjadi penting bagi siapa pun yang terlibat dalam pengembangan web karena fungsionalitas dan fleksibilitasnya.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://www.dewaweb.com/blog/apa-itu-mariadb/",
+                    linkText: "Pelajari lebih mengenai MariaDB"
+                },
+                oracle: {
+                    title: "Apa itu Oracle?",
+                    content: " Oracle Database adalah basis data relasional yang sangat berguna untuk menyimpan, mengatur, dan mengelola data dalam jumlah yang sangat besar. Dalam Oracle Database, terdapat fitur-fitur lengkap yang memudahkan pengguna dalam melakukan manajemen basis data, mulai dari backup dan restore data hingga pengaturan keamanan data yang sangat canggih. Manfaat dari Oracle Database sangatlah besar, karena mempermudah manajemen basis data, meningkatkan kinerja aplikasi, serta menjamin keamanan data yang sangat tinggi.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://www.quest.com/learn/what-is-oracle-database.aspx",
+                    linkText: "Pelajari lebih mengenai Oracle"
+                },
+                sqlite: {
+                    title: "Apa itu SQLite?",
+                    content: "SQLite adalah sebuah sistem manajemen database yang bersifat open-source dan tidak memerlukan server. Fungsi utama SQLite yaitu menyimpan data pada perangkat secara efisien. Fleksibilitas dan efisiensi ini menjadikannya pilihan populer dalam pengembangan aplikasi skala kecil hingga menengah.SQLite sangat berperan dalam pengembangan aplikasi Android dengan mendukung kinerja aplikasi yang lebih cepat. Pengembang dapat menyimpan data aplikasi seperti preferensi pengguna, catatan, atau informasi lainnya secara lokal. Pentingnya memahami SQLite menjadikan pengembang mampu mengoptimalkan penggunaan memori dan kinerja aplikasi.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://www.dewaweb.com/blog/apa-itu-sqlite-database/",
+                    linkText: "Pelajari lebih mengenai SQLite"
+                },
+                jwt: {
+                    title: "Apa itu JWT?",
+                    content: "JSON Web Token, yang berarti token ini menggunakan JSON (Javascript Object Notation) berbentuk string panjang yang sangat random, lalu token ini memungkinkan kita untuk mengirimkan data yang dapat diverifikasi oleh dua pihak atau lebih.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://santrikoding.com/apa-itu-jwt",
+                    linkText: "Pelajari lebih mengenai JWT"
+                },
+                oauth: {
+                    title: "Apa itu OAuth?",
+                    content: "Otorisasi terbuka (OAuth) adalah kerangka kerja otorisasi standar terbuka yang memberikan aplikasi akses ke sumber daya pengguna akhir yang dilindungi, seperti foto, kalender, atau postingan media sosial, tanpa memerlukan login atau kata sandi akun pengguna.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://accurate.id/api-integration/oauth/",
+                    linkText: "Pelajari lebih mengenai OAuth"
+                },
+                openid: {
+                    title: "Apa itu OpenID?",
+                    content: "OpenID Connect (OIDC) adalah protokol autentikasi identitas yang merupakan perluasan dari otorisasi terbuka (OAuth) 2.0 untuk menstandardisasi proses autentikasi dan otorisasi pengguna saat mereka masuk untuk mengakses layanan digital. OIDC menyediakan autentikasi , yang berarti memverifikasi bahwa pengguna adalah orang yang mereka katakan. OAuth 2.0 mengotorisasi sistem mana yang diizinkan untuk diakses oleh pengguna tersebut. OAuth 2.0 biasanya digunakan untuk memungkinkan dua aplikasi yang tidak terkait untuk berbagi informasi tanpa mengorbankan data pengguna. Misalnya, banyak orang menggunakan akun email atau media sosial mereka untuk masuk ke situs pihak ketiga daripada membuat nama pengguna dan kata sandi baru. OIDC juga digunakan untuk menyediakan akses masuk tunggal. Organisasi dapat menggunakan sistem manajemen identitas dan akses (IAM) yang aman seperti Microsoft Entra ID (sebelumnya Azure Active Directory ) sebagai autentikator utama identitas, lalu menggunakan OIDC untuk meneruskan autentikasi tersebut ke aplikasi lain. Dengan cara ini, pengguna hanya perlu masuk sekali dengan satu nama pengguna dan kata sandi untuk mengakses beberapa aplikasi.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://id.wikipedia.org/wiki/OpenID#:~:text=OpenID%20adalah%20sebuah%20standar%20desentralisasi,digital%20(ID)%20yang%20sama.",
+                    linkText: "Pelajari lebih mengenai OpenID"
+                },
+                nginx: {
+                    title: "Apa itu Nginx?",
+                    content: "NGINX adalah web server yang juga berfungsi sebagai email proxy, reverse proxy, dan load balancer. Struktur software ini bersifat asinkron dan event-driven; yang memungkinkan banyak request atau permintaan diproses pada waktu bersamaan.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://www.dewaweb.com/blog/apa-itu-nginx/",
+                    linkText: "Pelajari lebih mengenai Nginx"
+                },
+                apache: {
+                    title: "Apa itu Apache?",
+                    content: "Apache adalah software web server gratis dan open source yang memungkinkan user mengupload website di internet. Server ini telah menjadi platform bagi 33% website di seluruh dunia, dengan nama resmi Apache HTTP Server. Apache merupakan salah satu web server tertua dan terbaik, dirilis untuk kali pertama pada tahun 1995, serta dikelola dan dikembangkan oleh Apache Software Foundation.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://www.biznetgio.com/news/apa-itu-apache-web-server",
+                    linkText: "Pelajari lebih mengenai Apache"
+                },
+                caddy: {
+                    title: "Apa itu Caddy?",
+                    content: "Caddy web server adalah sebuah platform server web yang andal dan dirancang untuk memudahkan pengelolaan situs web. Mengusung fungsionalitas yang sederhana dan mudah dipahami, server ini mendukung fitur-fitur canggih seperti HTTPS otomatis dan penjadwalan pengelolaan konten.Dikenal sebagai perangkat lunak open source, Caddy web server menawarkan tingkat keamanan yang sangat baik karena terus update secara berkala. Caddy memastikan server tidak hanya transparan tetapi juga terbuka terhadap kontribusi komunitas global untuk perbaikan dan peningkatan.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://www.dewaweb.com/blog/caddy-web-server/",
+                    linkText: "Pelajari lebih mengenai Caddy"
+                },
+                ms: {
+                    title: "Apa itu MS IIS?",
+                    content: "IIS atau Internet Information Services atau Internet Information Server adalah sebuah HTTP web server yang digunakan dalam sistem operasi server Windows, mulai dari Windows NT 4.0 Server, Windows 2000 Server atau Windows Server 2003. Layanan ini merupakan layanan terintegrasi dalam Windows 2000 Server, Windows Server 2003 atau sebagai add-on dalam Windows NT 4.0. Layanan ini berfungsi sebagai pendukung protokol TCP/IP yang berjalan dalam lapisan aplikasi (application layer). IIS juga menjadi fondasi dari platform Internet dan Intranet Microsoft, yang mencakup Microsoft Site Server, Microsoft Commercial Internet System dan produk-produk Microsoft BackOffice lainnya.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://www.dewaweb.com/blog/apa-itu-iis-server/",
+                    linkText: "Pelajari lebih mengenai MS IIS"
+                },
+                bootstrap: {
+                    title: "Apa itu Bootstrap?",
+                    content: "Bootstrap adalah framework web development berbasis HTML, CSS, dan JavaScript yang dirancang untuk mempercepat proses pengembangan web responsive dan mobile-first (memprioritaskan perangkat seluler).Selain bisa digunakan untuk mengembangkan website dengan lebih cepat, Bootstrap juga merupakan framework gratis yang bersifat open-source. Skrip dan syntax yang disediakan Bootstrap bisa diterapkan untuk berbagai komponen dalam desain web.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://www.biznetgio.com/news/apa-itu-bootstrap",
+                    linkText: "Pelajari lebih mengenai Bootstrap"
+                },
+                'html-definition': {
+                    title: "Apa itu HTML",
+                    content: "HTML atau HyperText Markup Language adalah bahasa dasar yang digunakan untuk membuat dan membangun struktur halaman web. HTML berfungsi sebagai kerangka kerja untuk mengatur konten, elemen, dan informasi yang akan ditampilkan di browser pengguna. HTML bekerja dengan menggunakan berbagai elemen atau tag yang memiliki fungsi spesifik dalam membangun tampilan halaman web yang informatif dan interaktif. Setiap elemen dalam HTML memiliki peran untuk menampilkan teks, gambar, tautan, formulir, dan berbagai konten lainnya yang membentuk pengalaman pengguna di halaman web.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://www.w3schools.com/html/html_intro.asp",
+                    linkText: "Pengenalan HTML"
+                },
+                'html-basics': {
+                    title: "HTML Dasar",
+                    content: "Bagian pertama yang harus dipelajari dalam HTML adalah dasar-dasarnya. Ini meliputi pemahaman elemen-elemen utama seperti heading untuk memberikan judul halaman atau bagian, paragraf untuk menuliskan teks yang informatif, serta elemen-elemen lainnya seperti daftar dan tautan. Elemen-elemen ini memungkinkan halaman memiliki struktur yang rapi dan mudah dipahami oleh pengguna. Selain itu, elemen gambar juga digunakan untuk membuat halaman lebih menarik secara visual. Pemahaman ini menjadi fondasi penting sebelum masuk ke konsep yang lebih kompleks.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://www.w3schools.com/html/html_intro.asp",
+                    linkText: "Pelajari Lebih Mengenai Dasar HTML "
+                },
+                'semantic-html': {
+                    title: "Semantic HTML",
+                    content: "Konsep Writing Semantic HTML adalah praktik menulis HTML dengan elemen yang memiliki makna atau tujuan spesifik, yang membuat halaman lebih mudah dipahami oleh mesin pencari dan teknologi bantu seperti pembaca layar. Elemen semantik seperti <header>, <nav>, <section>, dan <footer> digunakan untuk memisahkan konten halaman ke dalam bagian yang jelas dan memiliki konteks yang mudah dipahami. Menggunakan elemen semantik juga meningkatkan performa SEO dan membantu dalam membangun halaman web yang ramah dan inklusif.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://www.w3schools.com/html/html5_semantic_elements.asp",
+                    linkText: "Pelajari lebih mengenai Semantic HTML"
+                },
+                'forms-validations': {
+                    title: "Formulir dan Validasi",
+                    content: "Formulir adalah salah satu elemen penting dalam HTML yang memungkinkan pengguna untuk berinteraksi dengan halaman web, misalnya mengirimkan data atau masukan. Forms and Validations adalah aspek yang perlu dipahami, di mana formulir digunakan untuk mengumpulkan informasi seperti nama, email, atau umpan balik dari pengguna. Validasi formulir dilakukan untuk memastikan bahwa data yang dikirim oleh pengguna sudah sesuai dengan format yang diinginkan, seperti memastikan email valid atau kolom yang wajib diisi sudah terisi dengan benar. Validasi ini bisa dilakukan langsung dengan atribut HTML atau dengan bantuan JavaScript untuk mengatur logika yang lebih kompleks.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://web.dev/learn/forms/",
+                    linkText: "Formulir dan Validasi lebih lanjut"
+                },
+                'aksesibilitas': {
+                    title: "Aksesibilitas",
+                    content: "Aksesibilitas juga menjadi komponen penting dalam pembuatan halaman menggunakan HTML. Accessibility berfokus pada membuat halaman yang dapat diakses oleh semua pengguna, termasuk mereka dengan disabilitas atau keterbatasan tertentu. Ini dilakukan dengan memastikan penggunaan elemen yang tepat, memberikan teks alternatif pada gambar, dan menggunakan atribut ARIA untuk mendukung teknologi bantu seperti pembaca layar. Dengan mendesain halaman yang inklusif dan ramah aksesibilitas, pengalaman pengguna bisa lebih maksimal tanpa membatasi kelompok tertentu.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://web.dev/accessibility",
+                    linkText: "Pelajari lebih mengenai Aksesibilitas"
+                },
+                'SEO': {
+                    title: "SEO Dasar",
+                    content: "SEO Basics juga sangat penting dalam HTML. SEO (Search Engine Optimization) berfokus pada strategi yang dilakukan agar halaman web muncul di hasil pencarian mesin pencari seperti Google. Dalam HTML, praktik ini dilakukan dengan menambahkan meta tags, membuat struktur heading yang benar, menambahkan teks alternatif pada gambar, dan membuat tautan internal dan eksternal yang relevan. Teknik ini membuat halaman mudah ditemukan oleh mesin pencari dan memungkinkan lebih banyak pengunjung mengakses halaman yang dibuat.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://developers.google.com/search/docs",
+                    linkText: "Pelajari lebih mengenai SEO"
+                },
+                JSdefinition: {
+                    title: "Apa itu JavaScript?",
+                    content: "JavaScript adalah bahasa pemrograman yang menambahkan interaktivitas dan logika pada halaman web. Dengan JavaScript, pengembang dapat membuat elemen dinamis seperti animasi, validasi formulir, atau pengambilan data dari server.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://www.w3schools.com/js/",
+                    linkText: "Pelajari lebih mengenai JavaScript"
+                },
+                dasarJS: {
+                    title: "Dasar JavaScript?",
+                    content: "Dasar JavaScript meliputi variabel, tipe data, operator, fungsi, serta struktur kontrol seperti loops dan conditionals. Elemen ini memungkinkan pengembang mengatur alur logika aplikasi secara fleksibel.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://www.w3schools.com/js/",
+                    linkText: "Pelajari lebih mengenai JavaSript"
+                },
+                DOM: {
+                    title: "DOM Manipulation",
+                    content: "JavaScript dapat mengakses dan mengubah struktur HTML melalui DOM. Contohnya, elemen dapat diubah tampilannya secara langsung, seperti mengganti warna teks atau menambahkan elemen baru.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://www.codeguage.com/courses/js/html-dom-introduction",
+                    linkText: "Pelajari lebih mengenai DOM"
+                },
+                API: {
+                    title: "Fetch API",
+                    content: "Fetch API digunakan untuk mengambil data dari server dengan mudah dan cepat melalui permintaan HTTP. Dengan Fetch API, pengembang bisa mengambil informasi dari server tanpa perlu me-refresh halaman. Contohnya, mengakses data JSON dari server atau melakukan komunikasi dengan database untuk menampilkan data secara dinamis.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API",
+                    linkText: "Pelajari lebih mengenai Fetch API"
+                },
+                'css': {
+                    title: "CSS adalah",
+                    content: "Bahasa yang digunakan untuk mengatur tampilan dan desain halaman web. Dengan CSS, pengembang dapat mengontrol bagaimana elemen-elemen HTML terlihat, seperti warna, font, tata letak, ukuran, hingga efek visual. CSS memainkan peran penting dalam menciptakan pengalaman pengguna yang menarik, responsif, dan profesional.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://www.w3schools.com/js/",
+                    linkText: "Pelajari lebih mengenai CSS"
+                },
+                'css-dasar': {
+                    title: "Dasar CSS",
+                    content: "Dasar CSS meliputi pemahaman tentang selektor, properti, dan nilai. Selektor digunakan untuk memilih elemen HTML tertentu yang ingin diberi gaya, misalnya elemen berbasis tag, kelas, atau ID. Setiap elemen memiliki properti seperti color, font-size, dan background-color, yang menentukan gaya visualnya. Nilai yang diberikan pada properti akan menentukan bagaimana elemen tersebut tampil, misalnya color: red; membuat teks berwarna merah. Dasar-dasar ini menjadi fondasi dalam memahami penggunaan CSS secara lebih kompleks.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://www.w3schools.com/css/",
+                    linkText: "Pelajari lebih mengenai dasar-dasar CSS"
+                },
+                'css-layout': {
+                    title: "Layout CSS",
+                    content: "CSS memungkinkan pengembang membuat tata letak halaman web yang rapi dan responsif. Teknik seperti Flexbox digunakan untuk menyusun elemen secara fleksibel, baik secara horizontal maupun vertikal, sementara CSS Grid menawarkan sistem berbasis baris dan kolom untuk desain yang lebih kompleks. Selain itu, pemahaman tentang box model sangat penting untuk mengatur ruang dalam dan luar elemen (padding, border, margin). Dengan alat ini, pengembang dapat menciptakan tata letak yang terorganisir dan mudah dinavigasi.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://flexboxfroggy.com/",
+                    linkText: "Pelajari lebih mengenai Layout CSS"
+                },
+
+                'responsive-css': {
+                    title: "Responsive Design",
+                    content: "Desain responsif memastikan halaman web dapat menyesuaikan tampilannya pada berbagai perangkat, dari ponsel hingga layar desktop. Media queries memungkinkan pengembang menetapkan gaya khusus berdasarkan ukuran layar atau perangkat. Selain itu, penggunaan unit ukuran relatif seperti %, em, dan rem membantu elemen-elemen web tetap proporsional di berbagai resolusi layar. Desain responsif sangat penting untuk memastikan pengalaman pengguna yang konsisten di semua perangkat.",
+                    content2: "Kunjungi sumber berikut untuk mempelajari lebih lanjut:",
+                    content3: "",
+                    link: "https://web.dev/learn/design/",
+                    linkText: "Pelajari lebih mengenai Responsive Design CSS"
+                },
+            };
+
+            if (popupContent[type]) {
+                popup.querySelector('h2').innerText = popupContent[type].title;
+                popup.querySelector('h5').innerText = popupContent[type].content3;
+                popup.querySelector('p').innerText = popupContent[type].content;
+                popup.querySelector('h1').innerText = popupContent[type].content2;
+                const link = popup.querySelector('#popup-link');
+                link.href = popupContent[type].link;
+                link.style.display = popupContent[type].link ? 'block' : 'none'; // Sembunyikan jika tidak ada tautan
+                link.innerText = popupContent[type].linkText; // Atur teks unik sesuai properti linkText
+
+                popup.classList.remove('translate-x-full', 'opacity-0');
+                popup.classList.add('translate-x-0', 'opacity-100');
+            }
+        }
+
+        function hideModal() {
+            const popup = document.getElementById('http-popup');
+            popup.classList.remove('translate-x-0', 'opacity-100');
+            popup.classList.add('translate-x-full', 'opacity-0');
+        }
+        const dropdownBtn = document.querySelector('.dropdown-btn');
+        const dropdown = document.querySelector('.dropdown');
+    </script>
+</body>
+
+</html>
